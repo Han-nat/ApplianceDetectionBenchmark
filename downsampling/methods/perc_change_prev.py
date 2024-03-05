@@ -1,9 +1,11 @@
-def perc_change_prev_values(df, n):
-    df = df.T
+def perc_change_prev_values(df, column='aggregate', threshold=0.1):
+    if column not in df.columns:
+        raise ValueError(f'Column {column} not found in dataframe')
 
-    for col in df.columns:
-        df[str(col) + '_perc_change_prev_'] = 100 * df[col].pct_change(periods=1)
+    # Calculate the percentage change
+    df['perc_change'] = df[column].pct_change()
+    df['perc_change'] = df['perc_change'].fillna(float('inf'))
 
-    print(df.head(5))
+    mask = (df['perc_change'] > threshold) | (df['perc_change'] < -threshold)
 
-    return df.T
+    return df[mask].drop(columns=['perc_change'])

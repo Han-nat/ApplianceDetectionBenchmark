@@ -1,5 +1,6 @@
 import pandas as pds
 from methods.every_n import every_n
+from methods.perc_change_prev import perc_change_prev_values
 
 TEST_INDEX = [2]
 APPLIANCE_CASES = ['microwave', 'kettle', 'washing_machine']
@@ -27,11 +28,13 @@ for index in TEST_INDEX:
 
         data = pds.merge(house_data, appl_data, on='time', how='inner')
 
-        data = every_n(data)
+        data = perc_change_prev_values(data, threshold=1)
 
-        channel_data = data[['time', appliance]]
-        channel_data.to_csv(house_path+'channel_'+str(appliance_index)+'_en_2.dat', sep=' ', header=None, index=None)
+        print(data.head())
 
-        channel_data = data[['time', 'aggregate']]
-        channel_data.to_csv(house_path+f'channel_1_{appliance}_en_2.dat', sep=' ', header=None, index=None)
+        #channel_data = data[['time', appliance]]
+        #channel_data.to_csv(house_path+'channel_'+str(appliance_index)+'_en_2.dat', sep=' ', header=None, index=None)
+
+        #channel_data = data[['time', 'aggregate']]
+        #channel_data.to_csv(house_path+f'channel_1_{appliance}_en_2.dat', sep=' ', header=None, index=None)
 
