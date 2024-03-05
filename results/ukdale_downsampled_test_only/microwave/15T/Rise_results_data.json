@@ -1,0 +1,117 @@
+{
+    "0": {
+        "ACCURACY": 0.5818181818181818,
+        "PRECISION": 0.8909090909090909,
+        "RECALL": 0.550561797752809,
+        "PRECISION_MACRO": 0.5818181818181818,
+        "RECALL_MACRO": 0.6324237560192616,
+        "F1_SCORE": 0.6805555555555556,
+        "F1_SCORE_MACRO": 0.5376461988304093,
+        "F1_SCORE_WEIGHTED": 0.6259901648059544,
+        "ROC_AUC_SCORE": 0.6324237560192616,
+        "ROC_AUC_SCORE_MACRO": 0.6324237560192616,
+        "ROC_AUC_SCORE_WEIGHTED": 0.6324237560192616,
+        "CONFUSION_MATRIX": [
+            [
+                15,
+                6
+            ],
+            [
+                40,
+                49
+            ]
+        ]
+    },
+    "1": {
+        "ACCURACY": 0.5909090909090909,
+        "PRECISION": 0.9074074074074074,
+        "RECALL": 0.550561797752809,
+        "PRECISION_MACRO": 0.5965608465608465,
+        "RECALL_MACRO": 0.6562332798287854,
+        "F1_SCORE": 0.6853146853146853,
+        "F1_SCORE_MACRO": 0.5504495504495505,
+        "F1_SCORE_WEIGHTED": 0.6338207247298157,
+        "ROC_AUC_SCORE": 0.6562332798287853,
+        "ROC_AUC_SCORE_MACRO": 0.6562332798287853,
+        "ROC_AUC_SCORE_WEIGHTED": 0.6562332798287853,
+        "CONFUSION_MATRIX": [
+            [
+                16,
+                5
+            ],
+            [
+                40,
+                49
+            ]
+        ]
+    },
+    "2": {
+        "ACCURACY": 0.509090909090909,
+        "PRECISION": 0.9069767441860465,
+        "RECALL": 0.43820224719101125,
+        "PRECISION_MACRO": 0.5803540437348143,
+        "RECALL_MACRO": 0.6238630283574104,
+        "F1_SCORE": 0.5909090909090909,
+        "F1_SCORE_MACRO": 0.48863636363636365,
+        "F1_SCORE_WEIGHTED": 0.5518595041322314,
+        "ROC_AUC_SCORE": 0.6238630283574104,
+        "ROC_AUC_SCORE_MACRO": 0.6238630283574104,
+        "ROC_AUC_SCORE_WEIGHTED": 0.6238630283574104,
+        "CONFUSION_MATRIX": [
+            [
+                17,
+                4
+            ],
+            [
+                50,
+                39
+            ]
+        ]
+    },
+    "3": {
+        "ACCURACY": 0.5181818181818182,
+        "PRECISION": 0.8913043478260869,
+        "RECALL": 0.4606741573033708,
+        "PRECISION_MACRO": 0.5706521739130435,
+        "RECALL_MACRO": 0.6112894596040663,
+        "F1_SCORE": 0.6074074074074074,
+        "F1_SCORE_MACRO": 0.49193899782135075,
+        "F1_SCORE_WEIGHTED": 0.5633194692018221,
+        "ROC_AUC_SCORE": 0.6112894596040663,
+        "ROC_AUC_SCORE_MACRO": 0.6112894596040663,
+        "ROC_AUC_SCORE_WEIGHTED": 0.6112894596040663,
+        "CONFUSION_MATRIX": [
+            [
+                16,
+                5
+            ],
+            [
+                48,
+                41
+            ]
+        ]
+    },
+    "4": {
+        "ACCURACY": 0.5181818181818182,
+        "PRECISION": 0.8913043478260869,
+        "RECALL": 0.4606741573033708,
+        "PRECISION_MACRO": 0.5706521739130435,
+        "RECALL_MACRO": 0.6112894596040663,
+        "F1_SCORE": 0.6074074074074074,
+        "F1_SCORE_MACRO": 0.49193899782135075,
+        "F1_SCORE_WEIGHTED": 0.5633194692018221,
+        "ROC_AUC_SCORE": 0.6112894596040663,
+        "ROC_AUC_SCORE_MACRO": 0.6112894596040663,
+        "ROC_AUC_SCORE_WEIGHTED": 0.6112894596040663,
+        "CONFUSION_MATRIX": [
+            [
+                16,
+                5
+            ],
+            [
+                48,
+                41
+            ]
+        ]
+    }
+}

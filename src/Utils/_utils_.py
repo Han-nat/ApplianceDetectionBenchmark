@@ -86,6 +86,7 @@ class getmetrics():
         else:
             y_label = np.unique(y)
 
+            print(y_label)
             if np.count_nonzero(y==y_label[0]) > np.count_nonzero(y==y_label[1]):
                 minority_class = y_label[1]
             else :
@@ -93,12 +94,12 @@ class getmetrics():
 
         metrics['ACCURACY'] = accuracy_score(y, y_hat)
         
-        metrics['PRECISION'] = precision_score(y, y_hat, pos_label=minority_class, average='binary')
-        metrics['RECALL'] = recall_score(y, y_hat, pos_label=minority_class, average='binary')
+        metrics['PRECISION'] = precision_score(y, y_hat, average='binary')
+        metrics['RECALL'] = recall_score(y, y_hat, average='binary')
         metrics['PRECISION_MACRO'] = precision_score(y, y_hat, average='macro')
         metrics['RECALL_MACRO'] = recall_score(y, y_hat, average='macro')
         
-        metrics['F1_SCORE'] = f1_score(y, y_hat, pos_label=minority_class, average='binary')
+        metrics['F1_SCORE'] = f1_score(y, y_hat, average='binary')
         metrics['F1_SCORE_MACRO'] = f1_score(y, y_hat, average='macro')
         metrics['F1_SCORE_WEIGHTED'] = f1_score(y, y_hat, average='weighted')
         
@@ -106,7 +107,7 @@ class getmetrics():
         metrics['ROC_AUC_SCORE_MACRO'] = roc_auc_score(y, y_hat, average='macro')
         metrics['ROC_AUC_SCORE_WEIGHTED'] = roc_auc_score(y, y_hat, average='weighted')
         
-        metrics['CONFUSION_MATRIX'] = confusion_matrix(y, y_hat)
+        metrics['CONFUSION_MATRIX'] = confusion_matrix(y, y_hat).tolist()
 
         return metrics    
 
@@ -480,6 +481,8 @@ class classif_trainer_sktime():
             X_test = scaler.fit_transform(X_test.T).T
         
         _t = time.time()
+        print(X_test.ravel())
+        print(y_test.ravel())
         metrics = self.__apply_metrics(y_test.ravel(), self.model.predict(X_test))
         self.log[mask] = metrics
         self.test_time = round((time.time() - _t), 3)

@@ -1,3 +1,6 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import os
 import torch
 import numpy as np
@@ -50,7 +53,9 @@ def load_transpose_CER(file_x, file_case=None, mask='id_pdl', scale_data=False, 
         df_data = pd.merge(df_data_x, case, on=mask)
     else:
         df_data = df_data_x.set_index(mask)
-    
+
+    print(df_data.iloc[25727:, 0])
+
     return df_data
         
         
@@ -66,7 +71,6 @@ def split_train_valid_test_pdl(df_data, test_size=0.2, valid_size=0, nb_label_co
     
     df_train = df_data.loc[pdl_train, :].copy()
     df_test = df_data.loc[pdl_test, :].copy()
-    
 
     df_train = df_train.sample(frac=1, random_state=seed)
     df_test = df_test.sample(frac=1, random_state=seed)
@@ -75,6 +79,8 @@ def split_train_valid_test_pdl(df_data, test_size=0.2, valid_size=0, nb_label_co
     y_train = df_train.iloc[:,-nb_label_col:].to_numpy().astype(np.float32)
     X_test = df_test.iloc[:,:-nb_label_col].to_numpy().astype(np.float32)
     y_test = df_test.iloc[:,-nb_label_col:].to_numpy().astype(np.float32)
+
+    print(y_test)
     
     if valid_size != 0:
         pdl_valid = pdl_train_valid[int(len(pdl_train_valid) * (1-valid_size)):]
@@ -191,6 +197,8 @@ class NILMData(object):
             
             else:
                 output_data = np.concatenate((output_data, X[:cpt, :, :, :]), axis=0) if output_data.size else X[:cpt, :, :, :]
+
+        print(output_data)
         return output_data
     
     def _get_stems(self, dataframe):
@@ -301,7 +309,8 @@ class UKDALEData(NILMData):
                  cutoff=6000,
                  window_stride=None,
                  save_path=None,
-                 test_house_indicies=None):
+                 test_house_indicies=None,
+                 downsampled_suffix='_en_2'):
         super().__init__(data_path=data_path, 
                          save_path=save_path, 
                          train_house_indicies=train_house_indicies, 
@@ -315,6 +324,8 @@ class UKDALEData(NILMData):
         
         # ======= Add aggregate to appliance(s) list ======= #
         self.appliance_names = ['aggregate'] + appliance_names
+        self.downsampled_suffix = downsampled_suffix
+        self.test_indices = test_house_indicies
         
         assert data_path is not None, f"Provide path to UKDALE dataset."
     
@@ -324,26 +335,37 @@ class UKDALEData(NILMData):
         
         Return : pd.core.frame.DataFrame instance
         """
-        path_house = self.data_path+'House'+str(indice)+os.sep
+        path_house = self.data_path+'house_'+str(indice)+os.sep
+        print(path_house)
         self._check_if_file_exist(path_house+'labels.dat') # Check if labels exist at provided path
         
         # House labels
         house_label = pd.read_csv(path_house+'labels.dat',    sep=' ', header=None)
         house_label.columns = ['id', 'appliance_name']
         
-        # Aggregate and resampling
-        house_data = pd.read_csv(path_house+'channel_1.dat', sep=' ', header=None)
-        house_data.columns = ['time','aggregate']
-        house_data['time'] = pd.to_datetime(house_data['time'], unit = 's')
-        house_data = house_data.set_index('time').resample(self.sampling_rate).mean().fillna(method='ffill', limit=self.limit_ffill)
-        
         for appliance in self.appliance_names:
             if appliance=='aggregate':
                 continue
-                
+
+            house_path = path_house + 'channel_1.dat'
+            if indice in self.test_indices:
+                house_path = path_house + f'channel_1_{appliance}{self.downsampled_suffix}.dat'
+
+            # Aggregate and resampling
+            house_data = pd.read_csv(house_path, sep=' ', header=None)
+            house_data.columns = ['time', 'aggregate']
+            house_data['time'] = pd.to_datetime(house_data['time'], unit='s')
+            house_data = house_data.set_index('time').resample(self.sampling_rate).mean().fillna(method='ffill',
+                                                                                                     limit=self.limit_ffill)
+
             if len(house_label.loc[house_label['appliance_name']==appliance]['id'].values) != 0:
                 i = house_label.loc[house_label['appliance_name']==appliance]['id'].values[0]
-                appl_data = pd.read_csv(path_house+'channel_'+str(i)+'.dat', sep=' ', header=None)
+
+                appl_path = path_house+'channel_'+str(i)+'.dat'
+                if indice in self.test_indices:
+                    appl_path = path_house+'channel_'+str(i)+f'{self.downsampled_suffix}.dat'
+
+                appl_data = pd.read_csv(appl_path, sep=' ', header=None)
                 appl_data.columns = ['time',appliance]
                 appl_data['time'] = pd.to_datetime(appl_data['time'],unit = 's')
                 appl_data = appl_data.set_index('time').resample(self.sampling_rate).mean().fillna(method = 'ffill', limit=self.limit_ffill)   

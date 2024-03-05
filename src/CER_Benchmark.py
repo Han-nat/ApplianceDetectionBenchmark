@@ -13,13 +13,13 @@ from sktime.classification.interval_based import TimeSeriesForestClassifier, Ran
 from sktime.classification.distance_based import KNeighborsTimeSeriesClassifier
 
 sys.path.append(os.getcwd())
-from utils._utils_ import *
-from utils._utils_preprocessing_ import *
+from Utils._utils_ import *
+from Utils._utils_preprocessing_ import *
 
-from utils.Models.ResNet import ResNet
-from utils.Models.InceptionTime import Inception, InceptionTime
-from utils.Models.ConvNet import ConvNet
-from utils.Models.ResNetAtt import ResNetAtt
+from Utils.Models.ResNet import ResNet
+from Utils.Models.InceptionTime import Inception, InceptionTime
+from Utils.Models.ConvNet import ConvNet
+from Utils.Models.ResNetAtt import ResNetAtt
 
 
 def launch_sktime_training(model, X_train, y_train, X_test, y_test, path_res):
@@ -71,7 +71,7 @@ def launch_one_case(chosen_clf, classifiers, list_case, path_data, path_res):
         file_x = 'data/xT_residential_25728.csv'
         file_case = 'labels/'+case+'.csv'
 
-        dir_res = create_dir(path_res+case+os.sep)
+        dir_res = create_dir(str(path_res)+case+os.sep)
     
         df_data = load_transpose_CER(path_data+file_x, path_data+file_case)
 
@@ -106,8 +106,8 @@ def launch_one_case(chosen_clf, classifiers, list_case, path_data, path_res):
 if __name__ == "__main__":
 
     root = Path(os.getcwd()).resolve().parents[0]
-    path_data = root + '/data/CER/'
-    path_res = None # Need to be fill
+    path_data = './data/CER/'
+    path_res = 'results/cer' # Need to be fill
     
     chosen_classifier = str(sys.argv[1]) # Script argument
     list_case = [str(sys.argv[2])] # Script argument
