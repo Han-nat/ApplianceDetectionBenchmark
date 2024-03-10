@@ -12,13 +12,13 @@ from sktime.classification.interval_based import TimeSeriesForestClassifier, Ran
 from sktime.classification.distance_based import KNeighborsTimeSeriesClassifier
 
 sys.path.append(os.getcwd())
-from Utils._utils_ import *
-from Utils._utils_preprocessing_ import *
+from utils._utils_ import *
+from utils._utils_preprocessing_ import *
 
-from Utils.Models.ResNet import ResNet
-from Utils.Models.InceptionTime import Inception, InceptionTime
-from Utils.Models.ConvNet import ConvNet
-from Utils.Models.ResNetAtt import ResNetAtt
+from utils.Models.ResNet import ResNet
+from utils.Models.InceptionTime import Inception, InceptionTime
+from utils.Models.ConvNet import ConvNet
+from utils.Models.ResNetAtt import ResNetAtt
 
     
 def launch_sktime_training(model, X_train, y_train, X_test, y_test, path_res):
@@ -103,7 +103,7 @@ def REFIT_case(chosen_clf, classifiers, list_dict_case, list_param, path_res, pe
                                         sampling_rate=param['sampling_rate'],
                                         window_size=param['window_size'],
                                         train_house_indicies=ind_house_train,
-                                        test_house_indicies=ind_house_test,
+                                        test_house_indices=ind_house_test,
                                         limit_ffill=param['limit_ffill']
                                         )
 
