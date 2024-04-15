@@ -51,10 +51,10 @@ def create_graphs(data):
             print(group)
 
             for metric in METRICS:
-                plt.figure()
+                plt.figure(figsize=(6, 6))
                 plt.plot(group.index, group[metric]['mean'])
-                plt.ylabel(f'Metric: {metric}')
-                plt.ylabel(f'% Change Compression')
+                plt.ylabel(f'{metric}')
+                plt.xlabel(f'% Change Compression')
                 plt.xticks(group.index[::2],  rotation='vertical')
                 plt.savefig(f'results/graphs/{appliance}/{model}_{metric}.png')
 

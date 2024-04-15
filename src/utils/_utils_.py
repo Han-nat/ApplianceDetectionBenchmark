@@ -102,7 +102,7 @@ class getmetrics():
         metrics['F1_SCORE_MACRO'] = f1_score(y, y_hat, average='macro')
         metrics['F1_SCORE_WEIGHTED'] = f1_score(y, y_hat, average='weighted')
 
-        if (len(y_label) == 2):
+        if len(y_label) == 2:
             metrics['ROC_AUC_SCORE'] = roc_auc_score(y, y_hat)
             metrics['ROC_AUC_SCORE_MACRO'] = roc_auc_score(y, y_hat, average='macro')
             metrics['ROC_AUC_SCORE_WEIGHTED'] = roc_auc_score(y, y_hat, average='weighted')
@@ -483,13 +483,16 @@ class classif_trainer_sktime():
         _t = time.time()
         print(X_test.ravel())
         print(y_test.ravel())
+        print('eval.. predict')
         predictions = self.model.predict(X_test)
+        print('eval.. apply')
         metrics = self.__apply_metrics(y_test.ravel(), predictions)
         self.log[mask] = metrics
         self.test_time = round((time.time() - _t), 3)
         self.log['eval_time'] = self.test_time
         
         if self.save_checkpoint:
+            print('eval.. save')
             self.save()
 
         return metrics, predictions

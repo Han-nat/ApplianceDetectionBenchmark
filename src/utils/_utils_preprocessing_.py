@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler
 
 from imblearn.under_sampling import RandomUnderSampler
 
+from pathlib import Path
 
 #####################################################################################################################
 # Utils for data preprocessing
@@ -18,7 +19,7 @@ from imblearn.under_sampling import RandomUnderSampler
 
 def create_dir(path):
     try:
-        os.mkdir(path)
+        Path(path).mkdir(parents=True, exist_ok=True)
     except:
         pass
     return path
@@ -129,9 +130,10 @@ class NILMData(object):
         for indice in indices:
             data[indice] = downsampling_func(indice, appliance_names, threshold=threshold)
 
+
         return data
 
-    def BuildSaveNILMDataset(self, perc=1, mask_index='Time', downsampling_func=None, threshold=None):
+    def BuildSaveNILMDataset(self, perc=1, mask_index='Time', downsampling_func=None, func_name='every_n', threshold=None):
         """
         -> Call GetNILMDataset for train (and test indicies if provided).
         -> Save train and test if save_path is provided
@@ -149,9 +151,9 @@ class NILMData(object):
         #    training_downsampled_datasets = downsampling_func(self.house_train_indicies, self.appliance_names, threshold=threshold)
         #    print(f"Downsampled training datasets threshold ({threshold}): {training_downsampled_datasets.shape}")
 
-
         if self.house_test_indicies is not None and downsampling_func is not None:
-            testing_downsampled_datasets = downsampling_func(self.house_test_indicies, self.appliance_names, threshold=threshold)
+            testing_downsampled_datasets = downsampling_func(self.house_test_indicies, self.appliance_names,
+                                                             threshold=threshold, downsampling_func=func_name)
             print(f"Downsampled test datasets threshold ({threshold}): {testing_downsampled_datasets.shape}")
 
         train = self.GetNILMDataset(self.house_train_indicies, perc=perc, mask_index=mask_index, downsampled=training_downsampled_datasets)

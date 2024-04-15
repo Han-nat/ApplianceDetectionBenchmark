@@ -4,7 +4,7 @@ import math
 DATA_PATH = 'data/UKDALE/'
 
 TEST_INDEX = [2]
-APPLIANCE_CASES = ['microwave', 'kettle', 'washing_machine']
+APPLIANCE_CASES = ['microwave'] #, 'kettle', 'washing_machine'
 
 
 def perc_change_last_transmitted(df, column='aggregate', threshold=0.1):
@@ -25,6 +25,7 @@ def perc_change_last_transmitted(df, column='aggregate', threshold=0.1):
             ids.append(i)
             latest_val = recent_val
 
+    #print(df.iloc[ids])
     return df.iloc[ids]
 
 
@@ -41,7 +42,44 @@ def perc_change_prev_values(df, column='aggregate', threshold=0.1):
     return df[mask].drop(columns=['perc_change'])
 
 
-def get_downsampled_dataset(house_indices, appliances, threshold, downsampling_func=perc_change_last_transmitted):
+def absolute_change_last_transmitted(df, column='aggregate', threshold=0.1):
+    threshold = threshold * 100
+    if column not in df.columns:
+        raise ValueError(f'Column {column} not found in dataframe')
+
+    latest_val = df[column].iloc[0]
+    ids = [0]
+
+    for i in range(1, len(df)):
+        recent_val = df[column].iloc[i]
+        if abs(recent_val - latest_val) > threshold:
+            ids.append(i)
+            latest_val = recent_val
+
+    return df.iloc[ids]
+
+
+def absolute_change_prev_values(df, column='aggregate', threshold=0.1):
+    threshold = threshold * 100
+    if column not in df.columns:
+        raise ValueError(f'Column {column} not found in dataframe')
+
+    # Calculate the percentage change
+    df['absolute_change'] = df[column].diff(periods=1).abs()
+
+    mask = (df['absolute_change'] > threshold)
+
+    return df[mask].drop(columns=['absolute_change'])
+
+
+def every_n(df, step=2):
+    print(
+        'every_n: step =', step,
+    )
+    return df.iloc[::int(step)]
+
+
+def get_downsampled_dataset(house_indices, appliances, threshold, downsampling_func='absolute_change_last_transmitted'):
     for house_index in house_indices:
         house_path = DATA_PATH + 'house_' + str(house_index) + '/'
 
@@ -69,7 +107,16 @@ def get_downsampled_dataset(house_indices, appliances, threshold, downsampling_f
 
                 data = pds.merge(house_data, appl_data, on='time', how='inner')
 
-    data = downsampling_func(data, threshold=threshold)
+    if downsampling_func == 'absolute_change_last_transmitted':
+        data = absolute_change_last_transmitted(data, threshold=threshold)
+    elif downsampling_func == 'perc_change_prev_values':
+        data = perc_change_prev_values(data, threshold=threshold)
+    elif downsampling_func == 'perc_change_last_transmitted':
+        data = perc_change_last_transmitted(data, threshold=threshold)
+    elif downsampling_func == 'absolute_change_prev_values':
+        data = absolute_change_prev_values(data, threshold=threshold)
+    else:
+        data = every_n(data, step=threshold*100)
 
     return data
 
@@ -97,8 +144,6 @@ if __name__ == "__main__":
             data = pds.merge(house_data, appl_data, on='time', how='inner')
 
             data = perc_change_prev_values(data, threshold=0.01)
-
-            print(data.shape)
 
             #channel_data = data[['time', appliance]]
             #channel_data.to_csv(house_path+'channel_'+str(appliance_index)+'_en_2.dat', sep=' ', header=None, index=None)

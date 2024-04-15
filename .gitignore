@@ -1,2 +1,6 @@
 *.dat
 *.pt
+
+results/datasets/*.csv
+results/datasets/10_train.csv
+results/*.csv
